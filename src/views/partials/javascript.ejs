@@ -1,0 +1,154 @@
+<script>
+  const searchInput = document.getElementById("searchInput floatingTextarea");
+  const entryRows = document.querySelectorAll(".entry-row");
+  const noEntriesMessage = document.querySelector(".no-entries");
+
+  searchInput.addEventListener("input", () => {
+    const searchTerm = searchInput.value.trim().toLowerCase();
+
+    entryRows.forEach((row) => {
+      let shouldDisplayRow = false;
+
+      // Iterate through all cells in the row
+      Array.from(row.cells).forEach((cell) => {
+        const cellContent = cell.textContent.toLowerCase();
+
+        // If any cell contains the search term, display the row
+        if (cellContent.includes(searchTerm)) {
+          shouldDisplayRow = true;
+        }
+      });
+
+      // Update the display property of the row
+      row.style.display = shouldDisplayRow ? "table-row" : "none";
+    });
+
+    updateNoEntriesMessage();
+  });
+
+  // Check if there are any visible rows and update the "No entries" message
+  function updateNoEntriesMessage() {
+    const visibleRows = Array.from(entryRows).filter(
+      (row) => row.style.display !== "none"
+    );
+
+    if (visibleRows.length === 0) {
+      noEntriesMessage.style.display = "block";
+    } else {
+      noEntriesMessage.style.display = "none";
+    }
+  }
+
+  // Trigger the updateNoEntriesMessage function initially
+  updateNoEntriesMessage();
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const saveChangesButton = document.getElementById("saveChangesButton");
+    const form = document.querySelector("form");
+    const archiveIdField = document.getElementById("archive_id"); // Get the archive_id field
+
+    saveChangesButton.addEventListener("click", function (event) {
+      event.preventDefault();
+
+      if (form.checkValidity()) {
+        archiveIdField.removeAttribute("disabled");
+
+        form.submit();
+      } else {
+        form.reportValidity();
+      }
+    });
+  });
+
+  const sortingDropdown = document.getElementById("sorting");
+  const tableBody = document.getElementById("tableBody");
+
+  sortingDropdown.addEventListener("change", () => {
+    const sortBy = sortingDropdown.value;
+    const sortedRows = Array.from(tableBody.rows).slice(0); // Exclude header row
+
+    sortedRows.sort((a, b) => {
+      const aValue = a.cells[sortedColumnIndex[sortBy]].textContent;
+      const bValue = b.cells[sortedColumnIndex[sortBy]].textContent;
+
+      if (sortAsNumber.includes(sortBy)) {
+        return parseInt(aValue) - parseInt(bValue);
+      } else {
+        return aValue.localeCompare(bValue);
+      }
+    });
+
+    tableBody.innerHTML = "";
+    sortedRows.forEach((row) => tableBody.appendChild(row));
+  });
+
+  // Define the column index mapping
+  const sortedColumnIndex = {
+    id: 0,
+    archive_id: 1,
+    title: 2,
+    composer: 3,
+    arranger: 4,
+    closet: 5,
+    shelf: 6,
+  };
+
+  // Define criteria that should be sorted as numbers
+  const sortAsNumber = ["id", "archive_id", "closet", "shelf"];
+
+  function handleOverrideArchiveID() {
+    const archiveIdInput = document.getElementById("archive_id");
+    const overrideCheckbox = document.getElementById("overrideArchiveID");
+
+    if (overrideCheckbox.checked) {
+      archiveIdInput.removeAttribute("disabled");
+    } else {
+      archiveIdInput.value = "<%= maxArchiveId + 1 %>"; // Clear any custom value
+      archiveIdInput.setAttribute("disabled", "true");
+      setNextArchiveID(); // Set next auto-incremented value
+    }
+  }
+
+  let isCtrlOrCmdPressed = false;
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Control" || event.key === "Meta") {
+      isCtrlOrCmdPressed = true;
+    }
+
+    if (isCtrlOrCmdPressed && event.key === "n") {
+      // Prevent the default browser behavior (opening a new window/tab)
+      event.preventDefault();
+
+      const vnesiButton = document.querySelector(".openModal");
+      if (vnesiButton) {
+        vnesiButton.click();
+      }
+    }
+  });
+
+  document.addEventListener("keyup", function (event) {
+    if (event.key === "Control" || event.key === "Meta") {
+      isCtrlOrCmdPressed = false;
+    }
+  });
+
+  const modal = document.getElementById("exampleModal");
+  const saveChangesButton = document.getElementById("saveChangesButton");
+
+  modal.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+      // Prevent the default Enter key behavior (form submission)
+      event.preventDefault();
+
+      // Simulate clicking the "Vnesi podatke" button
+      saveChangesButton.click();
+    }
+  });
+</script>
+
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+  crossorigin="anonymous"
+></script>

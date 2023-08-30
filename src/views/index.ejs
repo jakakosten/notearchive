@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./partials/head.ejs') %>
+  <body>
+    <header class="p-3 mb-3 border-bottom">
+      <div
+        class="d-flex flex-wrap justify-content-between align-items-center header-container"
+      >
+        <h4 style="font-weight: bold">
+          <a href="/">Digitalni arhiv POK-1927</a>
+        </h4>
+
+        <div class="dropdown text-end">
+          <a
+            href="#"
+            class="d-block link-body-emphasis text-decoration-none dropdown-toggle align-items-center"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <p class="m-0">Zdravo, <%= name %></p>
+          </a>
+
+          <ul class="dropdown-menu text-small">
+            <li><a class="dropdown-item" href="/odjava">Odjava</a></li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="table-top">
+        <div class="search-container form-floating">
+          <input
+            type="text"
+            id="searchInput floatingTextarea"
+            placeholder="Search..."
+            class="form-control"
+          />
+          <label for="searchInput floatingTextarea">Iskanje</label>
+        </div>
+
+        <%- include('./partials/modalNewEntry.ejs') %>
+      </div>
+
+      <div class="form-floating">
+        <select id="sorting" class="form-select">
+          <option value="id">ID</option>
+          <option value="archive_id">Archive ID</option>
+          <option value="title">Naslovu</option>
+          <option value="composer">Skladatelju</option>
+          <option value="arranger">Aranžerju</option>
+          <option value="closet">Omari</option>
+          <option value="shelf">Polici</option>
+        </select>
+        <label for="sorting">Uredi po:</label>
+      </div>
+
+      <table class="entry-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Arhivna št.</th>
+            <th>Naslov</th>
+            <th>Skladatelj</th>
+            <th>Aranžer</th>
+            <th>Št. omare</th>
+            <th>Št. police</th>
+            <th>Opombe</th>
+            <th>Vnešeno dne</th>
+            <th>Funckije</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <% entries.forEach(entry => { %>
+          <tr class="entry-row">
+            <td><%= entry.id %></td>
+            <td>
+              <%= entry.archive_id < 10 ? ("00" + entry.archive_id) :
+              (entry.archive_id < 100 ? ("0" + entry.archive_id) :
+              entry.archive_id) %>
+            </td>
+
+            <td><%= entry.title %></td>
+            <td><%= entry.composer %></td>
+            <td><%= entry.arranger %></td>
+            <td><%= entry.closet %></td>
+            <td><%= entry.shelf %></td>
+            <td><%= entry.notes !== "" ? entry.notes : "/" %></td>
+            <td>
+              <%= entry.inserted_at ? entry.inserted_at.toLocaleString('sl-SI',
+              { timeZone: 'UTC', day: '2-digit', month: '2-digit', year:
+              'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'
+              }) : '' %>
+            </td>
+
+            <td>
+              <form action="/delete" method="POST">
+                <input type="hidden" name="entryId" value="<%= entry.id %>" />
+                <button
+                  class="btn btn-danger delete-button"
+                  onclick="return confirm('Ali si siguren da hočeš zbrisat?');"
+                  data-entry-id="<%= entry.id %>"
+                >
+                  Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+
+      <p class="no-entries" style="display: none">Ni rezultatov!</p>
+    </div>
+
+    <%- include('./partials/javascript.ejs') %>
+  </body>
+</html>

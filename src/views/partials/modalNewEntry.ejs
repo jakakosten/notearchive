@@ -1,0 +1,131 @@
+<button
+  type="button"
+  class="btn btn-primary openModal"
+  data-bs-toggle="modal"
+  data-bs-target="#exampleModal"
+>
+  Vnesi novo skladbo
+</button>
+
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Nova skladba</h1>
+
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form action="/add" method="POST">
+          <div class="mb-3">
+            <label for="archive_id" class="form-label">Arhivna št.</label>
+            <input type="number" class="form-control" id="archive_id"
+            name="archive_id" value="<%= maxArchiveId !== null ? (maxArchiveId +
+            1) : "001" %>" required disabled />
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="overrideArchiveID"
+                onchange="handleOverrideArchiveID()"
+              />
+              <label class="form-check-label" for="overrideArchiveID">
+                Override Archive ID
+              </label>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="title" class="form-label">Naslov skladbe</label>
+            <input
+              type="text"
+              class="form-control"
+              id="title"
+              name="title"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="composer" class="form-label">Skladatelj</label>
+            <input
+              type="text"
+              class="form-control"
+              id="composer"
+              name="composer"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="arranger" class="form-label">Aranžer</label>
+            <input
+              type="text"
+              class="form-control"
+              id="arranger"
+              name="arranger"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="closet" class="form-label">Št. omare</label>
+            <input
+              type="number"
+              min="1"
+              max="4"
+              class="form-control"
+              id="closet"
+              name="closet"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="shelf" class="form-label">Št. police</label>
+            <input
+              type="number"
+              min="1"
+              max="5"
+              class="form-control"
+              id="shelf"
+              name="shelf"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="notes" class="form-label">Opombe</label>
+            <input
+              type="text"
+              minlength="5"
+              maxlength="50"
+              class="form-control"
+              id="notes"
+              name="notes"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Zapri
+        </button>
+        <button type="button" class="btn btn-primary" id="saveChangesButton">
+          Vnesi podatke
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
