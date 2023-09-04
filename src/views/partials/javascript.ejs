@@ -109,30 +109,6 @@
     }
   }
 
-  let isCtrlOrCmdPressed = false;
-
-  document.addEventListener("keydown", function (event) {
-    if (event.key === "Control" || event.key === "Meta") {
-      isCtrlOrCmdPressed = true;
-    }
-
-    if (isCtrlOrCmdPressed && event.key === "n") {
-      // Prevent the default browser behavior (opening a new window/tab)
-      event.preventDefault();
-
-      const vnesiButton = document.querySelector(".openModal");
-      if (vnesiButton) {
-        vnesiButton.click();
-      }
-    }
-  });
-
-  document.addEventListener("keyup", function (event) {
-    if (event.key === "Control" || event.key === "Meta") {
-      isCtrlOrCmdPressed = false;
-    }
-  });
-
   const modal = document.getElementById("exampleModal");
   const saveChangesButton = document.getElementById("saveChangesButton");
 
